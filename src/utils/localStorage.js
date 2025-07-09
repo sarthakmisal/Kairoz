@@ -276,6 +276,33 @@ export const localStorageService = {
         return true
     },
 
+    // Calendar specific functions
+    getCalendarData: () => {
+        const tasks = localStorageService.getTasks()
+        const notes = localStorageService.getNotes()
+        const expenses = localStorageService.getExpenseEntries()
+        const pomodoroSessions = localStorageService.getPomodoroSessions()
+
+        return {
+            tasks,
+            notes,
+            expenses,
+            pomodoroSessions
+        }
+    },
+
+    getItemsForDate: (date) => {
+        const { tasks, notes, expenses, pomodoroSessions } = localStorageService.getCalendarData()
+        const dateStr = date.toISOString().split('T')[0]
+
+        return {
+            tasks: tasks.filter(task => task.dateCreated && task.dateCreated.startsWith(dateStr)),
+            notes: notes.filter(note => note.dateCreated && note.dateCreated.startsWith(dateStr)),
+            expenses: expenses.filter(expense => expense.dateCreated && expense.dateCreated.startsWith(dateStr)),
+            sessions: pomodoroSessions.filter(session => session.date === date.toDateString())
+        }
+    },
+
     // Initialize sample data
     initializeSampleData: () => {
         const existingTasks = localStorageService.getTasks()

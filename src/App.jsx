@@ -36,7 +36,7 @@ export default function App() {
             <Route path="team" element={<Team />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="notes" element={<Notes />} />
-              <Route path="/pomodoro" element={<PomodoroTimer />} />
+            <Route path="pomodoro" element={<PomodoroTimer />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Route>

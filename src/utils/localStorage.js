@@ -3,6 +3,7 @@
 const STORAGE_KEYS = {
     TASKS: 'kairoz_tasks',
     PROJECTS: 'kairoz_projects',
+    NOTES: 'kairoz_notes',
     USER: 'kairoz_user',
     REGISTERED_USERS: 'kairoz_registered_users'
 }
@@ -122,10 +123,66 @@ export const localStorageService = {
         return true
     },
 
+    // Notes management
+    getNotes: () => {
+        try {
+            const notes = localStorage.getItem(STORAGE_KEYS.NOTES)
+            return notes ? JSON.parse(notes) : []
+        } catch (error) {
+            console.error('Error getting notes from localStorage:', error)
+            return []
+        }
+    },
+
+    saveNotes: (notes) => {
+        try {
+            localStorage.setItem(STORAGE_KEYS.NOTES, JSON.stringify(notes))
+            return true
+        } catch (error) {
+            console.error('Error saving notes to localStorage:', error)
+            return false
+        }
+    },
+
+    addNote: (note) => {
+        const notes = localStorageService.getNotes()
+        const newNote = {
+            id: Date.now().toString(),
+            dateCreated: new Date().toISOString(),
+            ...note
+        }
+        notes.unshift(newNote) // Add to beginning for latest first
+        localStorageService.saveNotes(notes)
+        return newNote
+    },
+
+    updateNote: (noteId, updates) => {
+        const notes = localStorageService.getNotes()
+        const noteIndex = notes.findIndex(note => note.id === noteId)
+        
+        if (noteIndex !== -1) {
+            notes[noteIndex] = {
+                ...notes[noteIndex],
+                ...updates
+            }
+            localStorageService.saveNotes(notes)
+            return notes[noteIndex]
+        }
+        return null
+    },
+
+    deleteNote: (noteId) => {
+        const notes = localStorageService.getNotes()
+        const filteredNotes = notes.filter(note => note.id !== noteId)
+        localStorageService.saveNotes(filteredNotes)
+        return true
+    },
+
     // Initialize sample data
     initializeSampleData: () => {
         const existingTasks = localStorageService.getTasks()
         const existingProjects = localStorageService.getProjects()
+        const existingNotes = localStorageService.getNotes()
 
         if (existingTasks.length === 0) {
             const sampleTasks = [
@@ -193,6 +250,25 @@ export const localStorageService = {
             ]
 
             sampleProjects.forEach(project => localStorageService.addProject(project))
+        }
+
+        if (existingNotes.length === 0) {
+            const sampleNotes = [
+                {
+                    title: 'Welcome to Journalize',
+                    content: 'This is your personal journaling space! You can:\n\n**Create** new notes with rich content\n**Edit** existing notes\n**Search** through your notes\n**Toggle** markdown preview\n\nTry using markdown formatting like **bold text**, *italic text*, and # headers!',
+                },
+                {
+                    title: 'Project Ideas',
+                    content: '# Upcoming Projects\n\n## Web Development\n- Redesign portfolio website\n- Learn React Native\n- Build a personal blog\n\n## Personal Goals\n- Read 2 books this month\n- Exercise 3x per week\n- Learn a new programming language',
+                },
+                {
+                    title: 'Daily Reflection',
+                    content: 'Today was productive! Completed the authentication module and made good progress on the dashboard design.\n\n**What went well:**\n- Solved the login bug\n- Great team meeting\n- Finished user interface mockups\n\n**Tomorrow\'s priorities:**\n- Review pull requests\n- Update documentation\n- Plan next sprint',
+                }
+            ]
+
+            sampleNotes.forEach(note => localStorageService.addNote(note))
         }
     }
 }

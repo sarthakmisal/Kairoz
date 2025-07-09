@@ -12,6 +12,7 @@ import Team from './pages/Team'
 import Analytics from './pages/Analytics'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import Notes from './pages/Notes'
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
             <Route path="calendar" element={<Calendar />} />
             <Route path="team" element={<Team />} />
             <Route path="analytics" element={<Analytics />} />
+            <Route path="notes" element={<Notes />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Route>

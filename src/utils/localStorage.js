@@ -4,6 +4,7 @@ const STORAGE_KEYS = {
     TASKS: 'kairoz_tasks',
     PROJECTS: 'kairoz_projects',
     NOTES: 'kairoz_notes',
+    EXPENSES: 'kairoz_expenses',
     USER: 'kairoz_user',
     REGISTERED_USERS: 'kairoz_registered_users'
 }
@@ -220,6 +221,61 @@ export const localStorageService = {
         }
     },
 
+    // Expense Tracker management
+    getExpenseEntries: () => {
+        try {
+            const entries = localStorage.getItem(STORAGE_KEYS.EXPENSES)
+            return entries ? JSON.parse(entries) : []
+        } catch (error) {
+            console.error('Error getting expense entries from localStorage:', error)
+            return []
+        }
+    },
+
+    saveExpenseEntries: (entries) => {
+        try {
+            localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(entries))
+            return true
+        } catch (error) {
+            console.error('Error saving expense entries to localStorage:', error)
+            return false
+        }
+    },
+
+    addExpenseEntry: (entry) => {
+        const entries = localStorageService.getExpenseEntries()
+        const newEntry = {
+            id: Date.now().toString(),
+            dateCreated: new Date().toISOString(),
+            ...entry
+        }
+        entries.unshift(newEntry) // Add to beginning for latest first
+        localStorageService.saveExpenseEntries(entries)
+        return newEntry
+    },
+
+    updateExpenseEntry: (entryId, updates) => {
+        const entries = localStorageService.getExpenseEntries()
+        const entryIndex = entries.findIndex(entry => entry.id === entryId)
+        
+        if (entryIndex !== -1) {
+            entries[entryIndex] = {
+                ...entries[entryIndex],
+                ...updates
+            }
+            localStorageService.saveExpenseEntries(entries)
+            return entries[entryIndex]
+        }
+        return null
+    },
+
+    deleteExpenseEntry: (entryId) => {
+        const entries = localStorageService.getExpenseEntries()
+        const filteredEntries = entries.filter(entry => entry.id !== entryId)
+        localStorageService.saveExpenseEntries(filteredEntries)
+        return true
+    },
+
     // Initialize sample data
     initializeSampleData: () => {
         const existingTasks = localStorageService.getTasks()
@@ -311,6 +367,49 @@ export const localStorageService = {
             ]
 
             sampleNotes.forEach(note => localStorageService.addNote(note))
+        }
+
+        const existingExpenses = localStorageService.getExpenseEntries()
+        if (existingExpenses.length === 0) {
+            const sampleExpenses = [
+                {
+                    title: 'Salary',
+                    amount: 3500,
+                    type: 'Income',
+                    category: 'General',
+                    date: '2024-01-01'
+                },
+                {
+                    title: 'Grocery Shopping',
+                    amount: 85.50,
+                    type: 'Expense',
+                    category: 'Food',
+                    date: '2024-01-05'
+                },
+                {
+                    title: 'Gas',
+                    amount: 45.00,
+                    type: 'Expense',
+                    category: 'Transportation',
+                    date: '2024-01-06'
+                },
+                {
+                    title: 'Movie Tickets',
+                    amount: 28.00,
+                    type: 'Expense',
+                    category: 'Entertainment',
+                    date: '2024-01-07'
+                },
+                {
+                    title: 'Electricity Bill',
+                    amount: 120.00,
+                    type: 'Expense',
+                    category: 'Bills',
+                    date: '2024-01-08'
+                }
+            ]
+
+            sampleExpenses.forEach(expense => localStorageService.addExpenseEntry(expense))
         }
     }
 }

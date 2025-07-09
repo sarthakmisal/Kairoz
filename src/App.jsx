@@ -9,10 +9,11 @@ import Projects from './pages/Projects'
 import Calendar from './pages/Calendar'
 import Team from './pages/Team'
 import Analytics from './pages/Analytics'
-import Profile from './pages/Profile'
-import Settings from './pages/Settings'
 import Notes from './pages/Notes'
 import PomodoroTimer from './pages/PomodoroTimer'
+import ExpenseTracker from './pages/ExpenseTracker'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
 
 export default function App() {
   return (
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="analytics" element={<Analytics />} />
             <Route path="notes" element={<Notes />} />
             <Route path="pomodoro" element={<PomodoroTimer />} />
+            <Route path="expenses" element={<ExpenseTracker />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Route>

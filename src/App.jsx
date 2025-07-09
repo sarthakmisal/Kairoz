@@ -1,9 +1,44 @@
-import './App.css'
+
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import Layout from './layouts/Layout'
+import ProtectedRoute from './routes/ProtectedRoute'
+import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
+import Tasks from './pages/Tasks'
+import Projects from './pages/Projects'
+import Calendar from './pages/Calendar'
+import Team from './pages/Team'
+import Analytics from './pages/Analytics'
+import Profile from './pages/Profile'
+import Settings from './pages/Settings'
 
 export default function App() {
   return (
-    <main>
-      React ⚛️ + Vite ⚡ + Replit
-    </main>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="tasks" element={<Tasks />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="team" element={<Team />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   )
 }

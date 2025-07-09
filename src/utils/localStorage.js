@@ -178,6 +178,48 @@ export const localStorageService = {
         return true
     },
 
+    // Pomodoro Sessions management
+    getPomodoroSessions: () => {
+        try {
+            const sessions = localStorage.getItem('kairoz_pomodoro_sessions')
+            return sessions ? JSON.parse(sessions) : []
+        } catch (error) {
+            console.error('Error getting pomodoro sessions from localStorage:', error)
+            return []
+        }
+    },
+
+    savePomodoroSessions: (sessions) => {
+        try {
+            localStorage.setItem('kairoz_pomodoro_sessions', JSON.stringify(sessions))
+            return true
+        } catch (error) {
+            console.error('Error saving pomodoro sessions to localStorage:', error)
+            return false
+        }
+    },
+
+    // Pomodoro Settings management
+    getPomodoroSettings: () => {
+        try {
+            const settings = localStorage.getItem('kairoz_pomodoro_settings')
+            return settings ? JSON.parse(settings) : null
+        } catch (error) {
+            console.error('Error getting pomodoro settings from localStorage:', error)
+            return null
+        }
+    },
+
+    savePomodoroSettings: (settings) => {
+        try {
+            localStorage.setItem('kairoz_pomodoro_settings', JSON.stringify(settings))
+            return true
+        } catch (error) {
+            console.error('Error saving pomodoro settings to localStorage:', error)
+            return false
+        }
+    },
+
     // Initialize sample data
     initializeSampleData: () => {
         const existingTasks = localStorageService.getTasks()

@@ -1,0 +1,33 @@
+react-router-dom.js?v=24ae948b:529 Uncaught Error: Absolute route path "/pomodoro" nested under path "/*" is not valid. An absolute child route path must start with the combined path of all its parent routes.
+    at invariant (react-router-dom.js?v=24ae948b:529:11)
+    at flattenRoute (react-router-dom.js?v=24ae948b:845:7)
+    at react-router-dom.js?v=24ae948b:874:7
+    at Array.forEach (<anonymous>)
+    at flattenRoutes (react-router-dom.js?v=24ae948b:871:10)
+    at flattenRoute (react-router-dom.js?v=24ae948b:860:7)
+    at react-router-dom.js?v=24ae948b:874:7
+    at Array.forEach (<anonymous>)
+    at flattenRoutes (react-router-dom.js?v=24ae948b:871:10)
+    at matchRoutesImpl (react-router-dom.js?v=24ae948b:813:18)
+chunk-MCEUSTYS.js?v=24ae948b:14034 The above error occurred in the <Routes> component:
+
+    at Routes (https://bab4736c-b494-4358-a003-e504703ef959-00-xkyuo1fo8dst.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=24ae948b:6196:3)
+    at Router (https://bab4736c-b494-4358-a003-e504703ef959-00-xkyuo1fo8dst.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=24ae948b:6139:13)
+    at BrowserRouter (https://bab4736c-b494-4358-a003-e504703ef959-00-xkyuo1fo8dst.pike.replit.dev/node_modules/.vite/deps/react-router-dom.js?v=24ae948b:9181:3)
+    at AuthProvider (https://bab4736c-b494-4358-a003-e504703ef959-00-xkyuo1fo8dst.pike.replit.dev/src/context/AuthContext.jsx:29:32)
+    at App
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://reactjs.org/link/error-boundaries to learn more about error boundaries.
+logCapturedError @ chunk-MCEUSTYS.js?v=24ae948b:14034
+chunk-MCEUSTYS.js?v=24ae948b:19407 Uncaught Error: Absolute route path "/pomodoro" nested under path "/*" is not valid. An absolute child route path must start with the combined path of all its parent routes.
+    at invariant (react-router-dom.js?v=24ae948b:529:11)
+    at flattenRoute (react-router-dom.js?v=24ae948b:845:7)
+    at react-router-dom.js?v=24ae948b:874:7
+    at Array.forEach (<anonymous>)
+    at flattenRoutes (react-router-dom.js?v=24ae948b:871:10)
+    at flattenRoute (react-router-dom.js?v=24ae948b:860:7)
+    at react-router-dom.js?v=24ae948b:874:7
+    at Array.forEach (<anonymous>)
+    at flattenRoutes (react-router-dom.js?v=24ae948b:871:10)
+    at matchRoutesImpl (react-router-dom.js?v=24ae948b:813:18)

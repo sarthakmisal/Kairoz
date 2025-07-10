@@ -38,25 +38,13 @@ export default function Calendar() {
         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`
         
         const dayTasks = tasks.filter(task => {
-            if (!task.dateCreated) return false
-            try {
-                const taskDate = new Date(task.dateCreated)
-                if (isNaN(taskDate.getTime())) return false
-                return taskDate.toISOString().split('T')[0] === dateStr
-            } catch (error) {
-                return false
-            }
+            const taskDate = new Date(task.dateCreated).toISOString().split('T')[0]
+            return taskDate === dateStr
         })
         
         const dayNotes = notes.filter(note => {
-            if (!note.dateCreated) return false
-            try {
-                const noteDate = new Date(note.dateCreated)
-                if (isNaN(noteDate.getTime())) return false
-                return noteDate.toISOString().split('T')[0] === dateStr
-            } catch (error) {
-                return false
-            }
+            const noteDate = new Date(note.dateCreated).toISOString().split('T')[0]
+            return noteDate === dateStr
         })
 
         return { tasks: dayTasks, notes: dayNotes }

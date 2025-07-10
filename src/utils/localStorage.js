@@ -35,7 +35,6 @@ export const localStorageService = {
         const tasks = localStorageService.getTasks()
         const newTask = {
             id: Date.now().toString(),
-            dateCreated: new Date().toISOString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             ...task
@@ -319,8 +318,7 @@ export const localStorageService = {
                     priority: 'medium',
                     assignee: 'John Doe',
                     dueDate: '2024-01-15',
-                    projectId: '1',
-                    dateCreated: new Date('2024-01-10').toISOString()
+                    projectId: '1'
                 },
                 {
                     title: 'Design user interface',
@@ -329,8 +327,7 @@ export const localStorageService = {
                     priority: 'high',
                     assignee: 'Jane Smith',
                     dueDate: '2024-01-20',
-                    projectId: '1',
-                    dateCreated: new Date('2024-01-12').toISOString()
+                    projectId: '1'
                 },
                 {
                     title: 'Setup CI/CD pipeline',
@@ -339,8 +336,7 @@ export const localStorageService = {
                     priority: 'high',
                     assignee: 'Mike Johnson',
                     dueDate: '2024-01-25',
-                    projectId: '2',
-                    dateCreated: new Date('2024-01-08').toISOString()
+                    projectId: '2'
                 }
             ]
 

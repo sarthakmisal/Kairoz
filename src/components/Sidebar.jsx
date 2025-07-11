@@ -1,9 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { useTheme } from '../context/ThemeContext'
 
 export default function Sidebar({ isMobileMenuOpen, toggleMobileMenu }) {
     const location = useLocation()
-    const { isDarkMode } = useTheme()
 
     const navigation = [
         { name: 'Dashboard', href: '/dashboard', icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z' },
@@ -22,9 +20,7 @@ export default function Sidebar({ isMobileMenuOpen, toggleMobileMenu }) {
             {/* Desktop Sidebar */}
             <div className="hidden md:flex md:flex-shrink-0 md:fixed md:inset-y-0 md:left-0 md:w-64 md:top-16 md:z-20">
                 <div className="flex flex-col w-64">
-                    <div className={`flex flex-col flex-grow pt-5 pb-4 overflow-y-auto border-r h-full ${
-                        isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'
-                    }`}>
+                    <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto bg-white border-r border-gray-200 h-full">
                         <div className="flex items-center flex-shrink-0 px-4">
                             <div className="flex items-center space-x-3">
                                 <div className="h-10 w-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
@@ -79,9 +75,9 @@ export default function Sidebar({ isMobileMenuOpen, toggleMobileMenu }) {
             </div>
 
             {/* Mobile sidebar */}
-            <div className={`fixed inset-y-0 left-0 z-40 w-64 border-r transform transition-transform duration-300 ease-in-out md:hidden top-16 ${
+            <div className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out md:hidden top-16 ${
                 isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-            } ${isDarkMode ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-200'}`}>
+            }`}>
                 <div className="flex flex-col h-full pt-5 pb-4 overflow-y-auto">
                     <div className="flex items-center flex-shrink-0 px-4">
                         <div className="flex items-center space-x-3">
@@ -101,9 +97,7 @@ export default function Sidebar({ isMobileMenuOpen, toggleMobileMenu }) {
                                     `group flex items-center px-4 py-3 mx-2 text-sm font-medium rounded-xl transition-all duration-300 transform relative overflow-hidden ${
                                         isActive
                                             ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                                            : isDarkMode 
-                                                ? 'text-gray-300 hover:bg-gradient-to-r hover:from-blue-900 hover:to-purple-900 hover:text-white hover:scale-102'
-                                                : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-gray-900 hover:scale-102'
+                                            : 'text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 hover:text-gray-900 hover:scale-102'
                                     }`
                                 }
                             >

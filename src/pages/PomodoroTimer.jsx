@@ -141,7 +141,7 @@ export default function PomodoroTimer() {
     )
 
     return (
-        <div className="space-y-6 pt-6">
+        <div className="space-y-6">
             {/* Audio element for notifications */}
             <audio ref={audioRef} preload="auto">
                 <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmkhBDWJ1PLNeSsFJH/K8d6PQQsUYLXo66hVFAlBnN/yv2ghBDOH0fPNeSoDJoDG8N+VQQ4SYLjm66hWFAlBnN/xum0jBzaK1fPOeSs=" type="audio/wav" />
@@ -177,9 +177,17 @@ export default function PomodoroTimer() {
                             </div>
 
                             {/* Circular Progress */}
-                            <div className="relative inline-flex items-center justify-center mx-auto">
-                                <svg className="w-80 h-80 transform -rotate-90 drop-shadow-lg" viewBox="0 0 100 100">
-                                    {/* Background circle */}
+                            <div className="relative inline-flex items-center justify-center">
+                                <svg className="w-64 h-64 transform -rotate-90" viewBox="0 0 100 100">
+                                    <circle
+                                        cx="50"
+                                        cy="50"
+                                        r="45"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        fill="transparent"
+                                        className="text-gray-200"
+                                    />
                                     <circle
                                         cx="50"
                                         cy="50"
@@ -187,47 +195,21 @@ export default function PomodoroTimer() {
                                         stroke="currentColor"
                                         strokeWidth="3"
                                         fill="transparent"
-                                        className="text-gray-200"
-                                    />
-                                    {/* Progress circle */}
-                                    <circle
-                                        cx="50"
-                                        cy="50"
-                                        r="45"
-                                        stroke="currentColor"
-                                        strokeWidth="4"
-                                        fill="transparent"
                                         strokeDasharray={`${2 * Math.PI * 45}`}
                                         strokeDashoffset={`${2 * Math.PI * 45 * (1 - getProgress() / 100)}`}
-                                        strokeLinecap="round"
                                         className={sessionType === 'work' ? 'text-red-500' : 'text-green-500'}
                                         style={{
-                                            transition: 'stroke-dashoffset 1s ease-in-out',
-                                            filter: 'drop-shadow(0 0 8px rgba(239, 68, 68, 0.4))'
+                                            transition: 'stroke-dashoffset 0.5s ease-in-out',
                                         }}
-                                    />
-                                    {/* Inner decorative circle */}
-                                    <circle
-                                        cx="50"
-                                        cy="50"
-                                        r="38"
-                                        stroke="currentColor"
-                                        strokeWidth="1"
-                                        fill="transparent"
-                                        className="text-gray-100"
-                                        opacity="0.3"
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="text-center bg-white bg-opacity-90 rounded-full p-8 backdrop-blur-sm">
-                                        <div className="text-5xl font-mono font-bold text-gray-900 mb-2">
+                                    <div className="text-center">
+                                        <div className="text-4xl font-mono font-bold text-gray-900">
                                             {formatTime(timeLeft)}
                                         </div>
-                                        <div className="text-sm font-medium text-gray-600 mb-1">
+                                        <div className="text-sm text-gray-500 mt-1">
                                             {Math.round(getProgress())}% complete
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                            {sessionType === 'work' ? 'Focus Time' : 'Break Time'}
                                         </div>
                                     </div>
                                 </div>

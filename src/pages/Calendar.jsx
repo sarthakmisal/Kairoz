@@ -1,14 +1,9 @@
 
-import { useState, useEffect } from 'react'
-import { localStorageService } from '../utils/localStorage'
+import { useState } from 'react'
 
 export default function Calendar() {
     const [currentDate, setCurrentDate] = useState(new Date())
     const [view, setView] = useState('month') // month, week, day
-    const [tasks, setTasks] = useState([])
-    const [notes, setNotes] = useState([])
-    const [selectedDate, setSelectedDate] = useState(null)
-    const [showModal, setShowModal] = useState(false)
 
     const today = new Date()
     const currentMonth = currentDate.getMonth()
@@ -26,28 +21,16 @@ export default function Calendar() {
 
     const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-    // Load tasks and notes from localStorage
-    useEffect(() => {
-        const loadedTasks = localStorageService.getTasks()
-        const loadedNotes = localStorageService.getNotes()
-        setTasks(loadedTasks)
-        setNotes(loadedNotes)
-    }, [])
+    // Sample events
+    const events = [
+        { id: 1, title: 'Team Meeting', date: '2024-01-15', time: '10:00 AM', type: 'meeting' },
+        { id: 2, title: 'Project Deadline', date: '2024-01-20', time: '11:59 PM', type: 'deadline' },
+        { id: 3, title: 'Client Call', date: '2024-01-18', time: '2:00 PM', type: 'call' },
+    ]
 
-    const getItemsForDate = (date) => {
+    const getEventsForDate = (date) => {
         const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`
-        
-        const dayTasks = tasks.filter(task => {
-            const taskDate = new Date(task.dateCreated).toISOString().split('T')[0]
-            return taskDate === dateStr
-        })
-        
-        const dayNotes = notes.filter(note => {
-            const noteDate = new Date(note.dateCreated).toISOString().split('T')[0]
-            return noteDate === dateStr
-        })
-
-        return { tasks: dayTasks, notes: dayNotes }
+        return events.filter(event => event.date === dateStr)
     }
 
     const navigateMonth = (direction) => {
@@ -64,18 +47,13 @@ export default function Calendar() {
                today.getFullYear() === currentYear
     }
 
-    const handleDateClick = (date) => {
-        setSelectedDate(date)
-        setShowModal(true)
-    }
-
     const renderCalendarDays = () => {
         const days = []
         
         // Previous month's trailing days
         for (let i = firstDay - 1; i >= 0; i--) {
             days.push(
-                <div key={`prev-${daysInPrevMonth - i}`} className="p-3 text-gray-400 min-h-[120px] border border-gray-100">
+                <div key={`prev-${daysInPrevMonth - i}`} className="p-2 text-gray-400">
                     <span className="text-sm">{daysInPrevMonth - i}</span>
                 </div>
             )
@@ -83,49 +61,30 @@ export default function Calendar() {
 
         // Current month days
         for (let date = 1; date <= daysInMonth; date++) {
-            const dayItems = getItemsForDate(date)
-            const totalItems = dayItems.tasks.length + dayItems.notes.length
-            
+            const dayEvents = getEventsForDate(date)
             days.push(
                 <div 
                     key={date} 
-                    onClick={() => handleDateClick(date)}
-                    className={`p-3 min-h-[120px] border border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-150 ${
+                    className={`p-2 min-h-[100px] border border-gray-100 hover:bg-gray-50 cursor-pointer transition-colors duration-150 ${
                         isToday(date) ? 'bg-blue-50 border-blue-200' : 'bg-white'
                     }`}
                 >
-                    <div className="flex items-center justify-between mb-2">
-                        <span className={`text-sm font-medium ${isToday(date) ? 'text-blue-600' : 'text-gray-900'}`}>
-                            {date}
-                        </span>
-                        {totalItems > 0 && (
-                            <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-blue-500 rounded-full">
-                                {totalItems}
-                            </span>
-                        )}
-                    </div>
-                    <div className="space-y-1">
-                        {dayItems.tasks.slice(0, 2).map(task => (
+                    <span className={`text-sm font-medium ${isToday(date) ? 'text-blue-600' : 'text-gray-900'}`}>
+                        {date}
+                    </span>
+                    <div className="mt-1 space-y-1">
+                        {dayEvents.map(event => (
                             <div 
-                                key={task.id} 
-                                className="text-xs px-2 py-1 rounded truncate bg-green-100 text-green-800"
+                                key={event.id} 
+                                className={`text-xs px-2 py-1 rounded truncate ${
+                                    event.type === 'meeting' ? 'bg-blue-100 text-blue-800' :
+                                    event.type === 'deadline' ? 'bg-red-100 text-red-800' :
+                                    'bg-green-100 text-green-800'
+                                }`}
                             >
-                                📋 {task.title}
+                                {event.title}
                             </div>
                         ))}
-                        {dayItems.notes.slice(0, 2).map(note => (
-                            <div 
-                                key={note.id} 
-                                className="text-xs px-2 py-1 rounded truncate bg-yellow-100 text-yellow-800"
-                            >
-                                📝 {note.title}
-                            </div>
-                        ))}
-                        {totalItems > 4 && (
-                            <div className="text-xs text-gray-500 px-2">
-                                +{totalItems - 4} more
-                            </div>
-                        )}
                     </div>
                 </div>
             )
@@ -134,27 +93,21 @@ export default function Calendar() {
         return days
     }
 
-    const selectedDateItems = selectedDate ? getItemsForDate(selectedDate) : { tasks: [], notes: [] }
-
     return (
         <div className="space-y-6">
             {/* Page Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">Calendar</h1>
-                    <p className="text-gray-600 mt-1">View all tasks and notes in calendar layout</p>
+                    <p className="text-gray-600 mt-1">Manage your schedule and events</p>
                 </div>
                 <div className="mt-4 sm:mt-0 flex items-center space-x-3">
-                    <div className="flex items-center space-x-4 text-sm">
-                        <div className="flex items-center">
-                            <div className="w-3 h-3 bg-green-100 border border-green-300 rounded mr-2"></div>
-                            <span className="text-gray-600">Tasks</span>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="w-3 h-3 bg-yellow-100 border border-yellow-300 rounded mr-2"></div>
-                            <span className="text-gray-600">Notes</span>
-                        </div>
-                    </div>
+                    <button className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
+                        <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                        New Event
+                    </button>
                 </div>
             </div>
 
@@ -190,6 +143,21 @@ export default function Calendar() {
                         >
                             Today
                         </button>
+                        <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                            {['Month', 'Week', 'Day'].map((viewType) => (
+                                <button
+                                    key={viewType}
+                                    onClick={() => setView(viewType.toLowerCase())}
+                                    className={`px-3 py-1 text-sm font-medium rounded-md transition-all duration-200 ${
+                                        view === viewType.toLowerCase()
+                                            ? 'bg-white text-gray-900 shadow-sm'
+                                            : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                                >
+                                    {viewType}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,90 +179,32 @@ export default function Calendar() {
                 </div>
             </div>
 
-            {/* Date Detail Modal */}
-            {showModal && selectedDate && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
-                        <div className="p-6 border-b border-gray-200">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    {months[currentMonth]} {selectedDate}, {currentYear}
-                                </h3>
-                                <button
-                                    onClick={() => setShowModal(false)}
-                                    className="text-gray-400 hover:text-gray-600"
-                                >
-                                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div className="p-6 overflow-y-auto max-h-[60vh]">
-                            {selectedDateItems.tasks.length === 0 && selectedDateItems.notes.length === 0 ? (
-                                <p className="text-gray-500 text-center py-8">No tasks or notes for this date</p>
-                            ) : (
-                                <div className="space-y-6">
-                                    {selectedDateItems.tasks.length > 0 && (
-                                        <div>
-                                            <h4 className="text-md font-semibold text-gray-900 mb-3 flex items-center">
-                                                <svg className="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                                </svg>
-                                                Tasks ({selectedDateItems.tasks.length})
-                                            </h4>
-                                            <div className="space-y-3">
-                                                {selectedDateItems.tasks.map(task => (
-                                                    <div key={task.id} className="p-3 bg-green-50 rounded-lg border border-green-200">
-                                                        <div className="flex items-center justify-between">
-                                                            <h5 className="font-medium text-green-900">{task.title}</h5>
-                                                            <span className={`px-2 py-1 text-xs rounded-full ${
-                                                                task.priority === 'high' ? 'bg-red-100 text-red-800' :
-                                                                task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                                                'bg-gray-100 text-gray-800'
-                                                            }`}>
-                                                                {task.priority}
-                                                            </span>
-                                                        </div>
-                                                        {task.description && (
-                                                            <p className="text-green-700 text-sm mt-1">{task.description}</p>
-                                                        )}
-                                                        <p className="text-green-600 text-xs mt-2">
-                                                            Status: {task.status} • Created: {new Date(task.dateCreated).toLocaleTimeString()}
-                                                        </p>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {selectedDateItems.notes.length > 0 && (
-                                        <div>
-                                            <h4 className="text-md font-semibold text-gray-900 mb-3 flex items-center">
-                                                <svg className="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                </svg>
-                                                Notes ({selectedDateItems.notes.length})
-                                            </h4>
-                                            <div className="space-y-3">
-                                                {selectedDateItems.notes.map(note => (
-                                                    <div key={note.id} className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                                                        <h5 className="font-medium text-yellow-900">{note.title}</h5>
-                                                        <p className="text-yellow-700 text-sm mt-1 line-clamp-3">{note.content}</p>
-                                                        <p className="text-yellow-600 text-xs mt-2">
-                                                            Created: {new Date(note.dateCreated).toLocaleTimeString()}
-                                                        </p>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
+            {/* Upcoming Events */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Events</h3>
+                <div className="space-y-3">
+                    {events.map(event => (
+                        <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex items-center space-x-3">
+                                <div className={`h-3 w-3 rounded-full ${
+                                    event.type === 'meeting' ? 'bg-blue-500' :
+                                    event.type === 'deadline' ? 'bg-red-500' :
+                                    'bg-green-500'
+                                }`}></div>
+                                <div>
+                                    <p className="text-sm font-medium text-gray-900">{event.title}</p>
+                                    <p className="text-xs text-gray-500">{event.date} at {event.time}</p>
                                 </div>
-                            )}
+                            </div>
+                            <button className="text-gray-400 hover:text-gray-600">
+                                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                </svg>
+                            </button>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            )}
+            </div>
         </div>
     )
 }

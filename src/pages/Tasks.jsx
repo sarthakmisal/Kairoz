@@ -346,116 +346,160 @@ export default function Tasks() {
             ):(
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
+                        <table className="w-full table-auto min-w-[800px]">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Task</th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Assignee</th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
-                                    <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Project</th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[200px]">
+                                        Task
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                                        Status
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[100px]">
+                                        Priority
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[120px]">
+                                        Due Date
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
+                                        Assignee
+                                    </th>
+                                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">
+                                        Project
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {sortedTasks.map((task) => (
-                                    <tr key={task.id} className="hover:bg-gray-50 transition-colors duration-150">
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="max-w-xs">
-                                                {editingCell === `${task.id}-title` ? (
-                                                    <input
-                                                        type="text"
-                                                        value={editValue}
-                                                        onChange={(e) => setEditValue(e.target.value)}
-                                                        onBlur={() => handleCellBlur(task.id, 'title')}
-                                                        onKeyDown={(e) => handleCellKeyDown(e, task.id, 'title')}
-                                                        className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        autoFocus
-                                                    />
-                                                ) : (
-                                                    <div
-                                                        onClick={() => handleCellClick(task.id, 'title', task.title)}
-                                                        className="cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
-                                                    >
-                                                        <div className="text-sm font-medium text-gray-900 truncate">{task.title}</div>
-                                                        <div className="text-sm text-gray-500 truncate">{task.description}</div>
+                                    <tr key={task.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                <div className="flex-shrink-0 h-8 w-8 sm:h-10 sm:w-10">
+                                                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                                        <svg className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                                        </svg>
                                                     </div>
-                                                )}
+                                                </div>
+                                                <div className="ml-3 sm:ml-4">
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {task.title}
+                                                    </div>
+                                                    <div className="text-xs sm:text-sm text-gray-500 truncate max-w-[150px] sm:max-w-none">
+                                                        {task.description}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <select
-                                                value={task.assignee}
-                                                onChange={(e) => handleDropdownChange(task.id, 'assignee', e.target.value)}
-                                                className="text-sm text-gray-900 border-none bg-transparent focus:ring-2 focus:ring-blue-500 rounded px-1"
-                                            >
-                                                <option value="">Unassigned</option>
-                                                {assigneeOptions.map(assignee => (
-                                                    <option key={assignee} value={assignee}>{assignee}</option>
-                                                ))}
-                                            </select>
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                            {editingCell === `${task.id}-status` ? (
+                                                <select
+                                                    value={editingValue}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    onBlur={() => handleCellSave(task.id, 'status')}
+                                                    onKeyDown={(e) => handleCellKeyDown(e, task.id, 'status')}
+                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                    autoFocus
+                                                >
+                                                    <option value="pending">Pending</option>
+                                                    <option value="in-progress">In Progress</option>
+                                                    <option value="completed">Completed</option>
+                                                </select>
+                                            ) : (
+                                                <span
+                                                    onClick={() => handleCellClick(task.id, 'status', task.status)}
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 ${
+                                                        task.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                                        task.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :
+                                                        'bg-orange-100 text-orange-800'
+                                                    }`}
+                                                >
+                                                    {task.status}
+                                                </span>
+                                            )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <select
-                                                value={task.status}
-                                                onChange={(e) => handleDropdownChange(task.id, 'status', e.target.value)}
-                                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border-none ${getStatusColor(task.status)}`}
-                                            >
-                                                {statusOptions.map(status => (
-                                                    <option key={status} value={status}>
-                                                        {status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ')}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                            {editingCell === `${task.id}-priority` ? (
+                                                <select
+                                                    value={editingValue}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    onBlur={() => handleCellSave(task.id, 'priority')}
+                                                    onKeyDown={(e) => handleCellKeyDown(e, task.id, 'priority')}
+                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                    autoFocus
+                                                >
+                                                    <option value="low">Low</option>
+                                                    <option value="medium">Medium</option>
+                                                    <option value="high">High</option>
+                                                </select>
+                                            ) : (
+                                                <span
+                                                    onClick={() => handleCellClick(task.id, 'priority', task.priority)}
+                                                    className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 ${
+                                                        task.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                                        task.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                                        'bg-green-100 text-green-800'
+                                                    }`}
+                                                >
+                                                    {task.priority}
+                                                </span>
+                                            )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <select
-                                                value={task.priority}
-                                                onChange={(e) => handleDropdownChange(task.id, 'priority', e.target.value)}
-                                                className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full border-none ${getPriorityColor(task.priority)}`}
-                                            >
-                                                {priorityOptions.map(priority => (
-                                                    <option key={priority} value={priority}>
-                                                        {priority.charAt(0).toUpperCase() + priority.slice(1)}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             {editingCell === `${task.id}-dueDate` ? (
                                                 <input
                                                     type="date"
-                                                    value={editValue}
-                                                    onChange={(e) => setEditValue(e.target.value)}
-                                                    onBlur={() => handleCellBlur(task.id, 'dueDate')}
+                                                    value={editingValue}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    onBlur={() => handleCellSave(task.id, 'dueDate')}
                                                     onKeyDown={(e) => handleCellKeyDown(e, task.id, 'dueDate')}
-                                                    className="text-sm text-gray-900 border border-blue-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                                                     autoFocus
                                                 />
                                             ) : (
                                                 <div
                                                     onClick={() => handleCellClick(task.id, 'dueDate', task.dueDate)}
-                                                    className="text-sm text-gray-900 cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
+                                                    className="text-xs sm:text-sm text-gray-900 cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
                                                 >
-                                                    {task.dueDate}
+                                                    {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
+                                            {editingCell === `${task.id}-assignee` ? (
+                                                <input
+                                                    type="text"
+                                                    value={editingValue}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    onBlur={() => handleCellSave(task.id, 'assignee')}
+                                                    onKeyDown={(e) => handleCellKeyDown(e, task.id, 'assignee')}
+                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
+                                                    autoFocus
+                                                />
+                                            ) : (
+                                                <div
+                                                    onClick={() => handleCellClick(task.id, 'assignee', task.assignee)}
+                                                    className="text-xs sm:text-sm text-gray-900 cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
+                                                >
+                                                    {task.assignee}
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                                             {editingCell === `${task.id}-project` ? (
                                                 <input
                                                     type="text"
-                                                    value={editValue}
-                                                    onChange={(e) => setEditValue(e.target.value)}
-                                                    onBlur={() => handleCellBlur(task.id, 'project')}
+                                                    value={editingValue}
+                                                    onChange={(e) => setEditingValue(e.target.value)}
+                                                    onBlur={() => handleCellSave(task.id, 'project')}
                                                     onKeyDown={(e) => handleCellKeyDown(e, task.id, 'project')}
-                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    className="w-full px-2 py-1 border border-blue-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
                                                     autoFocus
                                                 />
                                             ) : (
                                                 <div
                                                     onClick={() => handleCellClick(task.id, 'project', task.project)}
-                                                    className="text-sm text-gray-900 cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
+                                                    className="text-xs sm:text-sm text-gray-900 cursor-pointer hover:bg-blue-50 px-2 py-1 rounded"
                                                 >
                                                     {task.project}
                                                 </div>
@@ -469,242 +513,118 @@ export default function Tasks() {
                 </div>
             )}
 
-            {/* Fancy Add Task Modal */}
+            {/* Add Task Modal */}
             {showAddTaskModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform transition-all duration-300 scale-100">
-                        {/* Header with gradient */}
-                        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 p-6">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-4">
-                                    <div className="h-12 w-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center backdrop-blur-sm">
-                                        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h3 className="text-2xl font-bold text-white">Create New Task</h3>
-                                        <p className="text-blue-100">Fill in the details to add a new task</p>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setShowAddTaskModal(false)}
-                                    className="h-10 w-10 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
-                                >
-                                    <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div className="p-8 max-h-[calc(90vh-200px)] overflow-y-auto">
-                            <div className="space-y-8">
-                                {/* Main Task Info */}
-                                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
-                                    <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                        <svg className="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Task Information
-                                    </h4>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Task Title *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={newTask.title}
-                                                onChange={(e) => setNewTask({...newTask, title: e.target.value})}
-                                                placeholder="What needs to be done?"
-                                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm font-medium placeholder-gray-400"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Description
-                                            </label>
-                                            <textarea
-                                                value={newTask.description}
-                                                onChange={(e) => setNewTask({...newTask, description: e.target.value})}
-                                                placeholder="Provide more details about this task..."
-                                                rows={4}
-                                                className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 text-sm resize-none placeholder-gray-400"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Priority and Status */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-2xl p-6 border border-orange-100">
-                                        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                            <svg className="h-5 w-5 text-orange-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            Priority Level
-                                        </h4>
-                                        <div className="space-y-3">
-                                            {priorityOptions.map((priority) => (
-                                                <label key={priority} className="flex items-center cursor-pointer">
-                                                    <input
-                                                        type="radio"
-                                                        name="priority"
-                                                        value={priority}
-                                                        checked={newTask.priority === priority}
-                                                        onChange={(e) => setNewTask({...newTask, priority: e.target.value})}
-                                                        className="sr-only"
-                                                    />
-                                                    <div className={`flex items-center space-x-3 p-3 rounded-xl border-2 transition-all duration-200 w-full ${
-                                                        newTask.priority === priority 
-                                                            ? 'border-orange-500 bg-orange-100' 
-                                                            : 'border-gray-200 hover:border-orange-300 hover:bg-orange-50'
-                                                    }`}>
-                                                        <div className={`h-4 w-4 rounded-full border-2 ${
-                                                            newTask.priority === priority 
-                                                                ? 'border-orange-500 bg-orange-500' 
-                                                                : 'border-gray-300'
-                                                        }`}>
-                                                            {newTask.priority === priority && (
-                                                                <div className="h-full w-full rounded-full bg-white scale-50"></div>
-                                                            )}
-                                                        </div>
-                                                        <span className={`font-medium capitalize ${
-                                                            newTask.priority === priority ? 'text-orange-700' : 'text-gray-700'
-                                                        }`}>
-                                                            {priority}
-                                                        </span>
-                                                    </div>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-100">
-                                        <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                            <svg className="h-5 w-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                            Task Status
-                                        </h4>
-                                        <div className="space-y-3">
-                                            {statusOptions.map((status) => (
-                                                <label key={status} className="flex items-center cursor-pointer">
-                                                    <input
-                                                        type="radio"
-                                                        name="status"
-                                                        value={status}
-                                                        checked={newTask.status === status}
-                                                        onChange={(e) => setNewTask({...newTask, status: e.target.value})}
-                                                        className="sr-only"
-                                                    />
-                                                    <div className={`flex items-center space-x-3 p-3 rounded-xl border-2 transition-all duration-200 w-full ${
-                                                        newTask.status === status 
-                                                            ? 'border-green-500 bg-green-100' 
-                                                            : 'border-gray-200 hover:border-green-300 hover:bg-green-50'
-                                                    }`}>
-                                                        <div className={`h-4 w-4 rounded-full border-2 ${
-                                                            newTask.status === status 
-                                                                ? 'border-green-500 bg-green-500' 
-                                                                : 'border-gray-300'
-                                                        }`}>
-                                                            {newTask.status === status && (
-                                                                <div className="h-full w-full rounded-full bg-white scale-50"></div>
-                                                            )}
-                                                        </div>
-                                                        <span className={`font-medium capitalize ${
-                                                            newTask.status === status ? 'text-green-700' : 'text-gray-700'
-                                                        }`}>
-                                                            {status.replace('-', ' ')}
-                                                        </span>
-                                                    </div>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Assignment and Timeline */}
-                                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100">
-                                    <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                                        <svg className="h-5 w-5 text-purple-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        Assignment & Timeline
-                                    </h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Assignee
-                                            </label>
-                                            <select
-                                                value={newTask.assignee}
-                                                onChange={(e) => setNewTask({...newTask, assignee: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-sm"
-                                            >
-                                                <option value="">Choose assignee...</option>
-                                                {assigneeOptions.map(assignee => (
-                                                    <option key={assignee} value={assignee}>{assignee}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Due Date
-                                            </label>
-                                            <input
-                                                type="date"
-                                                value={newTask.dueDate}
-                                                onChange={(e) => setNewTask({...newTask, dueDate: e.target.value})}
-                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-sm"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Project
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={newTask.project}
-                                                onChange={(e) => setNewTask({...newTask, project: e.target.value})}
-                                                placeholder="Project name..."
-                                                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-200 text-sm placeholder-gray-400"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Footer with actions */}
-                        <div className="bg-gray-50 px-8 py-6 border-t border-gray-200 flex justify-between items-center">
-                            <div className="flex items-center text-sm text-gray-500">
-                                <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-2xl p-4 sm:p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between mb-4 sm:mb-6">
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Add New Task</h2>
+                            <button
+                                onClick={() => setShowAddTaskModal(false)}
+                                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+                            >
+                                <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                                Fill in required fields to create task
+                            </button>
+                        </div>
+
+                        <div className="space-y-4 sm:space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Task Title</label>
+                                    <input
+                                        type="text"
+                                        value={newTask.title}
+                                        onChange={(e) => setNewTask({...newTask, title: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                        placeholder="Enter task title..."
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Project</label>
+                                    <input
+                                        type="text"
+                                        value={newTask.project}
+                                        onChange={(e) => setNewTask({...newTask, project: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                        placeholder="Enter project name..."
+                                    />
+                                </div>
                             </div>
-                            <div className="flex space-x-4">
-                                <button
-                                    onClick={() => setShowAddTaskModal(false)}
-                                    className="px-6 py-3 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-200"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={addNewTask}
-                                    disabled={!newTask.title.trim()}
-                                    className="px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                                >
-                                    <div className="flex items-center space-x-2">
-                                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                                        </svg>
-                                        <span>Create Task</span>
-                                    </div>
-                                </button>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                <textarea
+                                    value={newTask.description}
+                                    onChange={(e) => setNewTask({...newTask, description: e.target.value})}
+                                    rows={3}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                    placeholder="Enter task description..."
+                                />
                             </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                                    <select
+                                        value={newTask.priority}
+                                        onChange={(e) => setNewTask({...newTask, priority: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                    >
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                    <select
+                                        value={newTask.status}
+                                        onChange={(e) => setNewTask({...newTask, status: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                    >
+                                        <option value="pending">Pending</option>
+                                        <option value="in-progress">In Progress</option>
+                                        <option value="completed">Completed</option>
+                                    </select>
+                                </div>
+                                <div className="sm:col-span-2 md:col-span-1">
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">Due Date</label>
+                                    <input
+                                        type="date"
+                                        value={newTask.dueDate}
+                                        onChange={(e) => setNewTask({...newTask, dueDate: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Assignee</label>
+                                <input
+                                    type="text"
+                                    value={newTask.assignee}
+                                    onChange={(e) => setNewTask({...newTask, assignee: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base"
+                                    placeholder="Enter assignee name..."
+                                />
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-3 mt-6">
+                            <button
+                                onClick={() => setShowAddTaskModal(false)}
+                                className="w-full sm:w-auto px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={addNewTask}
+                                className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                            >
+                                Add Task
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -14,6 +14,7 @@ import PomodoroTimer from './pages/PomodoroTimer'
 import ExpenseTracker from './pages/ExpenseTracker'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
+import NotFound from './pages/NotFound'
 
 export default function App() {
   return (
@@ -22,26 +23,24 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="tasks" element={<Tasks />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="calendar" element={<Calendar />} />
-            <Route path="team" element={<Team />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="notes" element={<Notes />} />
-            <Route path="pomodoro" element={<PomodoroTimer />} />
-            <Route path="expenses" element={<ExpenseTracker />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="settings" element={<Settings />} />
+
+          {/* Protected Routes with Layout */}
+          <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/tasks" element={<Tasks />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/calendar" element={<Calendar />} />
+            <Route path="/team" element={<Team />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/notes" element={<Notes />} />
+            <Route path="/pomodoro" element={<PomodoroTimer />} />
+            <Route path="/expenses" element={<ExpenseTracker />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
+
+          {/* 404 Catch All */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </AuthProvider>
